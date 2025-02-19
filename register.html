@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BlueMotion</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .auth-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.1), rgba(0, 198, 255, 0.1));
+            padding: 2rem;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            width: 100%;
+            background-color: var(--bg-color);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h2 {
+            color: var(--heading-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background-color: var(--light-color);
+        }
+
+        .social-btn i {
+            font-size: 1.2rem;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .divider span {
+            padding: 0 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .password-requirements {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .requirement i {
+            font-size: 0.8rem;
+        }
+
+        .requirement.valid i {
+            color: var(--success-color);
+        }
+
+        .requirement.invalid i {
+            color: var(--danger-color);
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .terms input {
+            margin-top: 0.3rem;
+        }
+
+        .terms label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .terms a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .submit-btn:disabled {
+            background: var(--border-color);
+            cursor: not-allowed;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-error {
+            color: var(--danger-color);
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: rgba(231, 76, 60, 0.1);
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html">BlueMotion</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Register Section -->
+    <section class="auth-section">
+        <div class="auth-container">
+            <div class="auth-header">
+                <i class="fas fa-water" style="font-size: 3rem; color: var(--primary-color);"></i>
+                <h2>Create Account</h2>
+                <p>Join BlueMotion and start your adventure</p>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn">
+                    <i class="fab fa-google"></i>
+                    <span>Google</span>
+                </button>
+                <button class="social-btn">
+                    <i class="fab fa-facebook-f"></i>
+                    <span>Facebook</span>
+                </button>
+            </div>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <div class="auth-error"></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                    <div class="password-requirements">
+                        <div class="requirement" data-requirement="length">
+                            <i class="fas fa-times-circle"></i>
+                            <span>At least 8 characters</span>
+                        </div>
+                        <div class="requirement" data-requirement="uppercase">
+                            <i class="fas fa-times-circle"></i>
+                            <span>One uppercase letter</span>
+                        </div>
+                        <div class="requirement" data-requirement="lowercase">
+                            <i class="fas fa-times-circle"></i>
+                            <span>One lowercase letter</span>
+                        </div>
+                        <div class="requirement" data-requirement="number">
+                            <i class="fas fa-times-circle"></i>
+                            <span>One number</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <div class="terms">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+                <button type="submit" class="submit-btn" disabled>Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Login</a></p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const termsCheckbox = document.getElementById('terms');
+            const submitButton = registerForm.querySelector('button[type="submit"]');
+            const errorDiv = document.querySelector('.auth-error');
+
+            // Password requirements
+            const requirements = {
+                length: str => str.length >= 8,
+                uppercase: str => /[A-Z]/.test(str),
+                lowercase: str => /[a-z]/.test(str),
+                number: str => /[0-9]/.test(str)
+            };
+
+            function updateRequirements(password) {
+                let valid = true;
+                Object.keys(requirements).forEach(req => {
+                    const element = document.querySelector(`[data-requirement="${req}"]`);
+                    const isValid = requirements[req](password);
+                    element.classList.toggle('valid', isValid);
+                    element.classList.toggle('invalid', !isValid);
+                    element.querySelector('i').className = `fas fa-${isValid ? 'check' : 'times'}-circle`;
+                    valid = valid && isValid;
+                });
+                return valid;
+            }
+
+            function validateForm() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                const passwordValid = updateRequirements(password);
+                const passwordsMatch = password === confirmPassword;
+                const termsAccepted = termsCheckbox.checked;
+
+                submitButton.disabled = !(passwordValid && passwordsMatch && termsAccepted);
+
+                if (confirmPassword && !passwordsMatch) {
+                    errorDiv.textContent = 'Passwords do not match';
+                    errorDiv.style.display = 'block';
+                } else {
+                    errorDiv.style.display = 'none';
+                }
+            }
+
+            passwordInput.addEventListener('input', validateForm);
+            confirmPasswordInput.addEventListener('input', validateForm);
+            termsCheckbox.addEventListener('change', validateForm);
+
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(registerForm);
+                const userData = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password')
+                };
+
+                try {
+                    // Here you would typically make an API call to your backend
+                    // For now, we'll simulate a successful registration
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // Store user session
+                    sessionStorage.setItem('user', JSON.stringify({
+                        email: userData.email,
+                        name: userData.name
+                    }));
+
+                    // Redirect to dashboard
+                    window.location.href = 'index.html';
+
+                } catch (error) {
+                    errorDiv.textContent = 'Registration failed. Please try again.';
+                    errorDiv.style.display = 'block';
+                }
+            });
+
+            // Handle social login buttons
+            document.querySelectorAll('.social-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    errorDiv.textContent = 'Social sign up is not implemented yet';
+                    errorDiv.style.display = 'block';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueMotion - Admin Panel</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item" data-section="vehicles">
+                    <i class="fas fa-ship"></i>
+                    Vehicles
+                </a>
+                <a href="#" class="nav-item" data-section="reservations">
+                    <i class="fas fa-calendar-alt"></i>
+                    Reservations
+                </a>
+                <a href="#" class="nav-item" data-section="users">
+                    <i class="fas fa-users"></i>
+                    Users
+                </a>
+                <a href="../index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    Back to Site
+                </a>
+                <a href="#" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Admin Dashboard</h1>
+                <div class="admin-info">
+                    <span class="admin-name">Admin</span>
+                </div>
+            </header>
+
+            <!-- Dashboard Overview -->
+            <section id="dashboard" class="admin-section active">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3>Total Reservations</h3>
+                        <p class="stat-number">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Vehicles</h3>
+                        <p class="stat-number">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <p class="stat-number">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Revenue</h3>
+                        <p class="stat-number">0 DH</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vehicles Management -->
+            <section id="vehicles" class="admin-section">
+                <div class="section-header">
+                    <h2>Vehicle Management</h2>
+                    <button class="btn-primary" id="addVehicleBtn">
+                        <i class="fas fa-plus"></i> Add Vehicle
+                    </button>
+                </div>
+                <div class="vehicles-grid">
+                    <div class="vehicle-filters">
+                        <select id="vehicleType">
+                            <option value="all">All Types</option>
+                            <option value="jetski">Jet Skis</option>
+                            <option value="bateau">Bateaux</option>
+                        </select>
+                        <input type="text" placeholder="Search vehicles..." id="vehicleSearch">
+                    </div>
+                    <table class="vehicles-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Price/Hour</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehiclesList">
+                            <!-- Vehicles will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Reservations Management -->
+            <section id="reservations" class="admin-section">
+                <div class="section-header">
+                    <h2>Reservations</h2>
+                </div>
+                <div class="reservations-filters">
+                    <select id="reservationStatus">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <input type="date" id="reservationDate">
+                    <input type="text" placeholder="Search reservations..." id="reservationSearch">
+                </div>
+                <table class="reservations-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Vehicle</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsList">
+                        <!-- Reservations will be dynamically added here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Users Management -->
+            <section id="users" class="admin-section">
+                <div class="section-header">
+                    <h2>User Management</h2>
+                </div>
+                <div class="users-filters">
+                    <select id="userRole">
+                        <option value="all">All Roles</option>
+                        <option value="user">Users</option>
+                        <option value="admin">Admins</option>
+                    </select>
+                    <input type="text" placeholder="Search users..." id="userSearch">
+                </div>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersList">
+                        <!-- Users will be dynamically added here -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add/Edit Vehicle Modal -->
+    <div class="modal" id="vehicleModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Vehicle</h2>
+            <form id="vehicleForm">
+                <div class="form-group">
+                    <label for="vehicleName">Vehicle Name</label>
+                    <input type="text" id="vehicleName" required>
+                </div>
+                <div class="form-group">
+                    <label for="vehicleType">Type</label>
+                    <select id="vehicleTypeSelect" required>
+                        <option value="jetski">Jet Ski</option>
+                        <option value="bateau">Bateau</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="vehiclePrice">Price per Hour (DH)</label>
+                    <input type="number" id="vehiclePrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="vehicleCapacity">Capacity</label>
+                    <input type="number" id="vehicleCapacity" required>
+                </div>
+                <div class="form-group">
+                    <label for="vehicleDescription">Description</label>
+                    <textarea id="vehicleDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="vehicleImage">Image URL</label>
+                    <input type="text" id="vehicleImage" required>
+                </div>
+                <button type="submit" class="btn-primary">Save Vehicle</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+</body>
+</html>
