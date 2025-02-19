@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BlueMotion - Premium Jet Ski Rentals</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="assets/images/logo.png" alt="BlueMotion Logo">
+                <h1>BlueMotion</h1>
+            </div>
+            
+            <button class="mobile-menu-btn">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#jetskis" class="nav-link">Our JetSkis</a></li>
+                <li><a href="#bateaux" class="nav-link">Our Bateaux</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="#booking" class="navbar-cta">Book Now</a></li>
+                <li class="auth-links">
+                    <a href="login.html" class="auth-btn login-btn">
+                        <i class="fas fa-user"></i>
+                        <span>Login</span>
+                    </a>
+                    <a href="register.html" class="auth-btn signup-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Sign Up</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <img src="6.-yamaha-blaster-Unknown-13-1.webp" alt="Yamaha Blaster Jet Ski" class="hero-image">
+        <div class="hero-content">
+            <h1>Experience the Thrill of the Waves</h1>
+            <p>Discover the ultimate water adventure with our premium jet skis and Bateaux</p>
+
+        </div>
+    </section>
+
+    <!-- Our JetSkis Section -->
+    <section id="jetskis" class="featured-section">
+        <div class="container">
+            <h2 class="section-title">Our JetSkis</h2>
+            <div class="featured-grid">
+                <div class="featured-item fade-in">
+                    <div class="featured-image">
+                        <img src="Yamaha FX Limited SVHO.png" alt="Premium JetSki">
+                    </div>
+                    <div class="featured-content">
+                        <h3>Yamaha FX Limited SVHO</h3>
+                        <p>Experience luxury and power with our top-of-the-line model</p>
+                    </div>
+                </div>
+                <div class="featured-item fade-in">
+                    <div class="featured-image">
+                        <img src="Kawasaki Ultra LX.png" alt="Performance JetSki">
+                    </div>
+                    <div class="featured-content">
+                        <h3>Kawasaki Ultra LX</h3>
+                        <p>Perfect balance of performance and comfort</p>
+                    </div>
+                </div>
+                <div class="featured-item fade-in">
+                    <div class="featured-image">
+                        <img src="Sea-Doo RXT-X 300.png" alt="Family JetSki">
+                    </div>
+                    <div class="featured-content">
+                        <h3>Sea-Doo RXT-X 300</h3>
+                        <p>Ideal for family fun and recreational riding</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bateaux Section -->
+    <section id="bateaux" class="featured-section">
+        <div class="container">
+            <h2 class="section-title">Our Bateaux</h2>
+            <div class="featured-grid">
+                <div class="featured-item fade-in">
+                    <div class="featured-image">
+                        <img src="Luxury Yacht.webp" alt="Luxury Yacht">
+                    </div>
+                    <div class="featured-content">
+                        <h3>Luxury Yacht</h3>
+                        <p>Experience ultimate luxury with our premium yacht rental</p>
+                    </div>
+                </div>
+                <div class="featured-item fade-in">
+                    <div class="featured-image">
+                        <img src="Speed Boat.jpg" alt="Speed Boat">
+                    </div>
+                    <div class="featured-content">
+                        <h3>Speed Boat</h3>
+                        <p>Perfect for thrilling water adventures and sports</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section">
+        <div class="container">
+            <h2 class="section-title">Choose Your Adventure</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card fade-in">
+                    <div class="pricing-header">
+                        <h3>Basic Package</h3>
+                        <div class="price">$99<span>/hour</span></div>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Single Jet Ski Rental</li>
+                            <li><i class="fas fa-check"></i> Basic Safety Equipment</li>
+                            <li><i class="fas fa-check"></i> 15-min Training Session</li>
+                            <li><i class="fas fa-check"></i> Fuel Included</li>
+                        </ul>
+                    </div>
+                    <button class="book-now" data-item="basic">Book Now</button>
+                </div>
+                <div class="pricing-card featured fade-in">
+                    <div class="pricing-header">
+                        <h3>Premium Package</h3>
+                        <div class="price">$199<span>/hour</span></div>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> High-Performance Jet Ski</li>
+                            <li><i class="fas fa-check"></i> Premium Safety Equipment</li>
+                            <li><i class="fas fa-check"></i> 30-min Training Session</li>
+                            <li><i class="fas fa-check"></i> GoPro Rental Included</li>
+                            <li><i class="fas fa-check"></i> Fuel Included</li>
+                            <li><i class="fas fa-check"></i> Refreshments</li>
+                        </ul>
+                    </div>
+                    <button class="book-now" data-item="premium">Book Now</button>
+                </div>
+                <div class="pricing-card fade-in">
+                    <div class="pricing-header">
+                        <h3>Group Package</h3>
+                        <div class="price">$299<span>/hour</span></div>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> 2 Jet Skis Rental</li>
+                            <li><i class="fas fa-check"></i> Complete Safety Equipment</li>
+                            <li><i class="fas fa-check"></i> 30-min Training Session</li>
+                            <li><i class="fas fa-check"></i> Professional Guide</li>
+                            <li><i class="fas fa-check"></i> Photos & Videos Package</li>
+                        </ul>
+                    </div>
+                    <button class="book-now" data-item="group">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Location</h3>
+                        <p>123 Beach Drive, Marina Bay</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <h3>Phone</h3>
+                        <p>+1 234 567 8900</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p>info@bluemotion.com</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <h3>Opening Hours</h3>
+                        <p>Mon - Sun: 9:00 AM - 5:00 PM</p>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" required placeholder="Your Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" required placeholder="Your Email">
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" name="phone" required placeholder="Your Phone">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" required placeholder="Your Message"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+  <!-- Map Section -->
+  <section id="location" class="map-section">
+    <div class="container">
+        <h2 class="section-title">Find Us</h2>
+        <p class="section-subtitle">Visit our location for an amazing water adventure</p>
+    </div>
+    <div class="map-container">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3196.5733688425365!2d-2.9501939!3d35.1764031!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd77a53604888555%3A0x6f5af5e5c2c95285!2sPlage%20de%20Quemado!5e0!3m2!1sfr!2sma!4v1708174033599!5m2!1sfr!2sma" 
+            width="100%" 
+            height="450" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+    <div class="location-info">
+        <div class="info-card">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Address</h3>
+            <p>Plage de Quemado, Al Hoceima, Morocco</p>
+        </div>
+        <div class="info-card">
+            <i class="fas fa-phone-alt"></i>
+            <h3>Phone</h3>
+            <p>+212 123-456-789</p>
+        </div>
+        <div class="info-card">
+            <i class="fas fa-clock"></i>
+            <h3>Opening Hours</h3>
+            <p>Daily: 9:00 AM - 6:00 PM</p>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <h3>BlueMotion</h3>
+                    <p>Experience the thrill of jet skiing with our premium rental service. Safety, fun, and adventure guaranteed.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#jetskis">Our JetSkis</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#booking">Book Now</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to get special offers and updates</p>
+                    <form id="newsletterForm">
+                        <input type="email" placeholder="Your Email">
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BlueMotion. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Book Your Adventure</h2>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingDate">Date</label>
+                    <input type="date" id="bookingDate" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingTime">Time</label>
+                    <select id="bookingTime" name="time" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (hours)</label>
+                    <select id="duration" name="duration" required>
+                        <option value="1">1 Hour</option>
+                        <option value="2">2 Hours</option>
+                        <option value="3">3 Hours</option>
+                        <option value="4">4 Hours</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Proceed to Payment</button>
+            </form>
+        </div>
+    </div>
+
+<!-- Booking Choice Modal -->
+<div id="bookingChoiceModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Choose Your Adventure</h2>
+        <div class="booking-choices">
+            <div class="booking-choice" data-type="jetski">
+                <img src="Yamaha FX Limited SVHO.png" alt="Jet Ski">
+                <h3>Jet Ski</h3>
+                <p>Experience the thrill of personal watercraft</p>
+            </div>
+            <div class="booking-choice" data-type="bateau">
+                <img src="Luxury Yacht.webp" alt="Bateau">
+                <h3>Bateau</h3>
+                <p>Enjoy a luxurious boat experience</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Confirmation Modal -->
+<div id="bookingConfirmationModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="booking-success">
+            <i class="fas fa-check-circle"></i>
+            <h2>Booking Confirmed!</h2>
+            <p>Your reservation has been successfully processed.</p>
+            <div class="download-options">
+                <a href="#" id="downloadTicket" class="download-btn">
+                    <i class="fas fa-ticket-alt"></i>
+                    Download Ticket
+                </a>
+                <a href="#" id="downloadInvoice" class="download-btn">
+                    <i class="fas fa-file-invoice"></i>
+                    Download Invoice
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/payment.js"></script>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
