@@ -1,129 +1,154 @@
-// Handle login form submission
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        try {
-            // Here you would typically make an API call to your backend
-            const response = await mockLoginAPI(email, password);
-            
-            if (response.success) {
-                // Store the token in localStorage
-                localStorage.setItem('userToken', response.token);
-                localStorage.setItem('userRole', response.role);
-                
-                // Redirect based on role
-                if (response.role === 'admin') {
-                    window.location.href = '/admin/';
-                } else {
-                    window.location.href = '/dashboard.html';
-                }
+document.addEventListener('DOMContentLoaded', () => {
+    // Toggle password visibility
+    const togglePassword = document.querySelector('.toggle-password');
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const passwordInput = document.querySelector('#password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
             } else {
-                alert('Invalid credentials. Please try again.');
+                passwordInput.type = 'password';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
             }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('An error occurred during login. Please try again.');
-        }
-    });
-}
+        });
+    }
 
-// Handle registration form submission
-const registerForm = document.getElementById('registerForm');
-if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // Handle login form submission
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(loginForm);
+            const loginData = {
+                email: formData.get('email'),
+                password: formData.get('password'),
+                remember: formData.get('remember') === 'on'
+            };
+
+            try {
+                const response = await fetch('backend/api/auth/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store user data in localStorage
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    // Redirect based on user role
+                    if (data.user.role === 'admin') {
+                        window.location.href = 'admin/index.html';
+                    } else {
+                        window.location.href = 'user-dashboard.html';
+                    }
+                } else {
+                    showError(data.message || 'Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('An error occurred. Please try again.');
+            }
+        });
+    }
+
+    // Handle registration form submission
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(registerForm);
+            const registerData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                confirmPassword: formData.get('confirmPassword')
+            };
+
+            // Validate passwords match
+            if (registerData.password !== registerData.confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            try {
+                const response = await fetch('backend/api/auth/register.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(registerData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store user data
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    // Show success message and redirect
+                    showSuccess('Registration successful! Redirecting to dashboard...');
+                    setTimeout(() => {
+                        window.location.href = 'user-dashboard.html';
+                    }, 1500);
+                } else {
+                    showError(data.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('An error occurred. Please try again.');
+            }
+        });
+    }
+
+    // Helper functions for displaying messages
+    function showError(message) {
+        const errorDiv = document.querySelector('.auth-error') || document.createElement('div');
+        errorDiv.className = 'auth-error';
+        errorDiv.textContent = message;
         
-        const fullName = document.getElementById('fullName').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+        const form = document.querySelector('.auth-form');
+        if (!document.querySelector('.auth-error')) {
+            form.insertBefore(errorDiv, form.firstChild);
+        }
+    }
 
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
+    function showSuccess(message) {
+        const successDiv = document.querySelector('.auth-success') || document.createElement('div');
+        successDiv.className = 'auth-success';
+        successDiv.textContent = message;
+        
+        const form = document.querySelector('.auth-form');
+        if (!document.querySelector('.auth-success')) {
+            form.insertBefore(successDiv, form.firstChild);
+        }
+    }
+
+    // Check authentication status on protected pages
+    function checkAuth() {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const isProtectedPage = window.location.pathname.includes('dashboard') || 
+                              window.location.pathname.includes('admin');
+        
+        if (isProtectedPage && !user) {
+            window.location.href = 'login.html';
             return;
         }
 
-        try {
-            // Here you would typically make an API call to your backend
-            const response = await mockRegisterAPI({
-                fullName,
-                email,
-                phone,
-                password
-            });
-            
-            if (response.success) {
-                alert('Registration successful! Please login.');
-                window.location.href = '/login.html';
-            } else {
-                alert('Registration failed. Please try again.');
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
-            alert('An error occurred during registration. Please try again.');
+        if (user && window.location.pathname.includes('admin') && user.role !== 'admin') {
+            window.location.href = 'user-dashboard.html';
         }
-    });
-}
-
-// Mock API functions (Replace these with actual API calls)
-async function mockLoginAPI(email, password) {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock validation
-    if (email === 'admin@example.com' && password === 'admin123') {
-        return {
-            success: true,
-            token: 'mock-token-admin',
-            role: 'admin'
-        };
-    } else if (email === 'user@example.com' && password === 'user123') {
-        return {
-            success: true,
-            token: 'mock-token-user',
-            role: 'user'
-        };
     }
-    
-    return { success: false };
-}
 
-async function mockRegisterAPI(userData) {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock registration (always succeeds)
-    return {
-        success: true,
-        message: 'User registered successfully'
-    };
-}
-
-// Auth state check
-function checkAuth() {
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-        window.location.href = '/login.html';
-    }
-}
-
-// Logout function
-function logout() {
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('userRole');
-    window.location.href = '/login.html';
-}
-
-// Add logout event listeners
-document.querySelectorAll('.logout').forEach(button => {
-    button.addEventListener('click', (e) => {
-        e.preventDefault();
-        logout();
-    });
+    // Run auth check
+    checkAuth();
 });

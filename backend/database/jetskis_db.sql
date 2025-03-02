@@ -1,4 +1,4 @@
--- Create database
+swqa1-- Create database
 CREATE DATABASE IF NOT EXISTS jetskis_db;
 USE jetskis_db;
 

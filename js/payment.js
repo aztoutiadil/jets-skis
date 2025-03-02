@@ -352,199 +352,253 @@ function generatePDF(type) {
 }
 
 // Payment functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Get booking data from session storage
-    const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
-    if (!bookingData) {
-        window.location.href = 'index.html';
-        return;
-    }
-
-    // Display booking summary
-    const summaryContainer = document.getElementById('bookingSummary');
-    if (summaryContainer) {
-        summaryContainer.innerHTML = `
-            <h3>Booking Summary</h3>
-            <div class="summary-item">
-                <span>Package:</span>
-                <span>${bookingData.package.charAt(0).toUpperCase() + bookingData.package.slice(1)} Package</span>
-            </div>
-            <div class="summary-item">
-                <span>Date:</span>
-                <span>${new Date(bookingData.date).toLocaleDateString()}</span>
-            </div>
-            <div class="summary-item">
-                <span>Time:</span>
-                <span>${bookingData.time}</span>
-            </div>
-            <div class="summary-item">
-                <span>Duration:</span>
-                <span>${bookingData.duration} hour${bookingData.duration > 1 ? 's' : ''}</span>
-            </div>
-            <div class="summary-item total">
-                <span>Total:</span>
-                <span>$${bookingData.total}</span>
-            </div>
-        `;
+document.addEventListener('DOMContentLoaded', () => {
+    // Load booking details from sessionStorage
+    const bookingDetails = JSON.parse(sessionStorage.getItem('bookingDetails') || '{}');
+    
+    // Update summary section
+    const summarySection = document.querySelector('.booking-summary');
+    if (summarySection && bookingDetails.vehicleType) {
+        document.getElementById('selected-vehicle').textContent = bookingDetails.vehicleType;
+        document.getElementById('booking-type').textContent = bookingDetails.bookingType;
+        document.getElementById('total-amount').textContent = bookingDetails.price;
     }
 
     // Handle payment form submission
-    const paymentForm = document.getElementById('paymentForm');
+    const paymentForm = document.getElementById('payment-form');
     if (paymentForm) {
         paymentForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const submitBtn = paymentForm.querySelector('button[type="submit"]');
-            const loadingSpinner = document.createElement('div');
-            loadingSpinner.className = 'spinner';
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '';
-            submitBtn.appendChild(loadingSpinner);
+            
+            // Get form data
+            const formData = new FormData(paymentForm);
+            const paymentDetails = {
+                cardNumber: formData.get('card-number'),
+                expiryDate: formData.get('expiry'),
+                cvv: formData.get('cvv'),
+                name: formData.get('card-name'),
+                ...bookingDetails
+            };
 
             try {
-                // Simulate payment processing
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                // Send payment details to backend
+                const response = await fetch('backend/api/process-payment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(paymentDetails)
+                });
 
-                // Clear booking data from session storage
-                sessionStorage.removeItem('bookingData');
-
-                // Show success message
-                const successMessage = document.createElement('div');
-                successMessage.className = 'success-message';
-                successMessage.innerHTML = `
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Payment Successful!</h3>
-                    <p>Your booking has been confirmed. You will receive a confirmation email shortly.</p>
-                    <button onclick="window.location.href='index.html'" class="back-home">Back to Home</button>
-                `;
-
-                const container = document.querySelector('.container');
-                container.innerHTML = '';
-                container.appendChild(successMessage);
-
-                // Send confirmation email (simulated)
-                sendConfirmationEmail(bookingData);
-
+                if (response.ok) {
+                    // Clear booking details from session
+                    sessionStorage.removeItem('bookingDetails');
+                    
+                    // Show success message and redirect to confirmation
+                    alert('Payment successful! Your booking has been confirmed.');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    throw new Error('Payment failed');
+                }
             } catch (error) {
+                alert('Payment failed. Please try again.');
                 console.error('Payment error:', error);
-                const errorDiv = document.querySelector('.payment-error') || document.createElement('div');
-                errorDiv.className = 'payment-error';
-                errorDiv.textContent = 'There was an error processing your payment. Please try again.';
-                if (!document.querySelector('.payment-error')) {
-                    paymentForm.insertBefore(errorDiv, submitBtn);
-                }
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Pay Now';
             }
         });
-    }
-
-    // Credit card form validation
-    const cardNumberInput = document.getElementById('cardNumber');
-    const cardExpiryInput = document.getElementById('cardExpiry');
-    const cardCVVInput = document.getElementById('cardCVV');
-
-    if (cardNumberInput) {
-        cardNumberInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            value = value.replace(/(\d{4})/g, '$1 ').trim();
-            e.target.value = value.substring(0, 19);
-        });
-    }
-
-    if (cardExpiryInput) {
-        cardExpiryInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2);
-            }
-            e.target.value = value.substring(0, 5);
-        });
-    }
-
-    if (cardCVVInput) {
-        cardCVVInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
-        });
-    }
-
-    // Validate form before submission
-    function validatePaymentForm() {
-        const cardNumber = cardNumberInput.value.replace(/\s/g, '');
-        const cardExpiry = cardExpiryInput.value;
-        const cardCVV = cardCVVInput.value;
-
-        const errors = [];
-
-        if (cardNumber.length !== 16) {
-            errors.push('Please enter a valid 16-digit card number');
-        }
-
-        if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
-            errors.push('Please enter a valid expiry date (MM/YY)');
-        } else {
-            const [month, year] = cardExpiry.split('/');
-            const now = new Date();
-            const expiry = new Date(2000 + parseInt(year), parseInt(month) - 1);
-            if (expiry < now) {
-                errors.push('Card has expired');
-            }
-        }
-
-        if (cardCVV.length !== 3) {
-            errors.push('Please enter a valid 3-digit CVV');
-        }
-
-        return errors;
-    }
-
-    // Handle form validation on submit
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', (e) => {
-            const errors = validatePaymentForm();
-            if (errors.length > 0) {
-                e.preventDefault();
-                const errorDiv = document.querySelector('.payment-error') || document.createElement('div');
-                errorDiv.className = 'payment-error';
-                errorDiv.innerHTML = errors.map(error => `<p>${error}</p>`).join('');
-                if (!document.querySelector('.payment-error')) {
-                    paymentForm.insertBefore(errorDiv, paymentForm.querySelector('button'));
-                }
-            }
-        });
-    }
-
-    // Simulated email confirmation
-    function sendConfirmationEmail(bookingData) {
-        const emailContent = `
-            Dear ${bookingData.name},
-
-            Thank you for booking with BlueMotion! Your reservation has been confirmed.
-
-            Booking Details:
-            - Package: ${bookingData.package.charAt(0).toUpperCase() + bookingData.package.slice(1)} Package
-            - Date: ${new Date(bookingData.date).toLocaleDateString()}
-            - Time: ${bookingData.time}
-            - Duration: ${bookingData.duration} hour${bookingData.duration > 1 ? 's' : ''}
-            - Total Paid: $${bookingData.total}
-
-            Please arrive 15 minutes before your scheduled time for a safety briefing.
-            Don't forget to bring:
-            - Valid ID
-            - Swimming attire
-            - Towel
-            - Sunscreen
-
-            Location: 123 Beach Drive, Marina Bay
-
-            If you need to modify or cancel your booking, please contact us at least 24 hours in advance.
-
-            We look forward to seeing you!
-
-            Best regards,
-            BlueMotion Team
-        `;
-
-        console.log('Confirmation email sent:', emailContent);
     }
 });
+
+// Get booking data from session storage
+const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+if (!bookingData) {
+    window.location.href = 'index.html';
+    return;
+}
+
+// Display booking summary
+const summaryContainer = document.getElementById('bookingSummary');
+if (summaryContainer) {
+    summaryContainer.innerHTML = `
+        <h3>Booking Summary</h3>
+        <div class="summary-item">
+            <span>Package:</span>
+            <span>${bookingData.package.charAt(0).toUpperCase() + bookingData.package.slice(1)} Package</span>
+        </div>
+        <div class="summary-item">
+            <span>Date:</span>
+            <span>${new Date(bookingData.date).toLocaleDateString()}</span>
+        </div>
+        <div class="summary-item">
+            <span>Time:</span>
+            <span>${bookingData.time}</span>
+        </div>
+        <div class="summary-item">
+            <span>Duration:</span>
+            <span>${bookingData.duration} hour${bookingData.duration > 1 ? 's' : ''}</span>
+        </div>
+        <div class="summary-item total">
+            <span>Total:</span>
+            <span>$${bookingData.total}</span>
+        </div>
+    `;
+}
+
+// Handle payment form submission
+const paymentForm = document.getElementById('paymentForm');
+if (paymentForm) {
+    paymentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = paymentForm.querySelector('button[type="submit"]');
+        const loadingSpinner = document.createElement('div');
+        loadingSpinner.className = 'spinner';
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '';
+        submitBtn.appendChild(loadingSpinner);
+
+        try {
+            // Simulate payment processing
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Clear booking data from session storage
+            sessionStorage.removeItem('bookingData');
+
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <h3>Payment Successful!</h3>
+                <p>Your booking has been confirmed. You will receive a confirmation email shortly.</p>
+                <button onclick="window.location.href='index.html'" class="back-home">Back to Home</button>
+            `;
+
+            const container = document.querySelector('.container');
+            container.innerHTML = '';
+            container.appendChild(successMessage);
+
+            // Send confirmation email (simulated)
+            sendConfirmationEmail(bookingData);
+
+        } catch (error) {
+            console.error('Payment error:', error);
+            const errorDiv = document.querySelector('.payment-error') || document.createElement('div');
+            errorDiv.className = 'payment-error';
+            errorDiv.textContent = 'There was an error processing your payment. Please try again.';
+            if (!document.querySelector('.payment-error')) {
+                paymentForm.insertBefore(errorDiv, submitBtn);
+            }
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Pay Now';
+        }
+    });
+}
+
+// Credit card form validation
+const cardNumberInput = document.getElementById('cardNumber');
+const cardExpiryInput = document.getElementById('cardExpiry');
+const cardCVVInput = document.getElementById('cardCVV');
+
+if (cardNumberInput) {
+    cardNumberInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{4})/g, '$1 ').trim();
+        e.target.value = value.substring(0, 19);
+    });
+}
+
+if (cardExpiryInput) {
+    cardExpiryInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2);
+        }
+        e.target.value = value.substring(0, 5);
+    });
+}
+
+if (cardCVVInput) {
+    cardCVVInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+    });
+}
+
+// Validate form before submission
+function validatePaymentForm() {
+    const cardNumber = cardNumberInput.value.replace(/\s/g, '');
+    const cardExpiry = cardExpiryInput.value;
+    const cardCVV = cardCVVInput.value;
+
+    const errors = [];
+
+    if (cardNumber.length !== 16) {
+        errors.push('Please enter a valid 16-digit card number');
+    }
+
+    if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+        errors.push('Please enter a valid expiry date (MM/YY)');
+    } else {
+        const [month, year] = cardExpiry.split('/');
+        const now = new Date();
+        const expiry = new Date(2000 + parseInt(year), parseInt(month) - 1);
+        if (expiry < now) {
+            errors.push('Card has expired');
+        }
+    }
+
+    if (cardCVV.length !== 3) {
+        errors.push('Please enter a valid 3-digit CVV');
+    }
+
+    return errors;
+}
+
+// Handle form validation on submit
+if (paymentForm) {
+    paymentForm.addEventListener('submit', (e) => {
+        const errors = validatePaymentForm();
+        if (errors.length > 0) {
+            e.preventDefault();
+            const errorDiv = document.querySelector('.payment-error') || document.createElement('div');
+            errorDiv.className = 'payment-error';
+            errorDiv.innerHTML = errors.map(error => `<p>${error}</p>`).join('');
+            if (!document.querySelector('.payment-error')) {
+                paymentForm.insertBefore(errorDiv, paymentForm.querySelector('button'));
+            }
+        }
+    });
+}
+
+// Simulated email confirmation
+function sendConfirmationEmail(bookingData) {
+    const emailContent = `
+        Dear ${bookingData.name},
+
+        Thank you for booking with BlueMotion! Your reservation has been confirmed.
+
+        Booking Details:
+        - Package: ${bookingData.package.charAt(0).toUpperCase() + bookingData.package.slice(1)} Package
+        - Date: ${new Date(bookingData.date).toLocaleDateString()}
+        - Time: ${bookingData.time}
+        - Duration: ${bookingData.duration} hour${bookingData.duration > 1 ? 's' : ''}
+        - Total Paid: $${bookingData.total}
+
+        Please arrive 15 minutes before your scheduled time for a safety briefing.
+        Don't forget to bring:
+        - Valid ID
+        - Swimming attire
+        - Towel
+        - Sunscreen
+
+        Location: 123 Beach Drive, Marina Bay
+
+        If you need to modify or cancel your booking, please contact us at least 24 hours in advance.
+
+        We look forward to seeing you!
+
+        Best regards,
+        BlueMotion Team
+    `;
+
+    console.log('Confirmation email sent:', emailContent);
+}

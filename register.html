@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - BlueMotion</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .auth-section {
+        .auth-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -17,7 +18,7 @@
             padding: 2rem;
         }
 
-        .auth-container {
+        .auth-box {
             max-width: 400px;
             width: 100%;
             background-color: var(--bg-color);
@@ -41,52 +42,9 @@
             opacity: 0.8;
         }
 
-        .social-login {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .social-btn {
+        .auth-form {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.8rem;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .social-btn:hover {
-            background-color: var(--light-color);
-        }
-
-        .social-btn i {
-            font-size: 1.2rem;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 2rem 0;
-            color: var(--text-color);
-            opacity: 0.5;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: "";
-            flex: 1;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .divider span {
-            padding: 0 1rem;
+            flex-direction: column;
         }
 
         .form-group {
@@ -112,30 +70,16 @@
             outline: none;
         }
 
-        .password-requirements {
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--text-color);
-            opacity: 0.8;
+        .password-input {
+            position: relative;
         }
 
-        .requirement {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.25rem;
-        }
-
-        .requirement i {
-            font-size: 0.8rem;
-        }
-
-        .requirement.valid i {
-            color: var(--success-color);
-        }
-
-        .requirement.invalid i {
-            color: var(--danger-color);
+        .password-input i {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            cursor: pointer;
         }
 
         .terms {
@@ -163,7 +107,7 @@
             text-decoration: underline;
         }
 
-        .submit-btn {
+        .btn-primary {
             width: 100%;
             padding: 1rem;
             background: var(--gradient-1);
@@ -175,13 +119,54 @@
             transition: opacity 0.3s ease;
         }
 
-        .submit-btn:hover {
+        .btn-primary:hover {
             opacity: 0.9;
         }
 
-        .submit-btn:disabled {
-            background: var(--border-color);
-            cursor: not-allowed;
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-divider span {
+            padding: 0 1rem;
+        }
+
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 1rem;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-google:hover {
+            opacity: 0.9;
+        }
+
+        .btn-google i {
+            margin-right: 0.5rem;
         }
 
         .auth-footer {
@@ -197,192 +182,72 @@
         .auth-footer a:hover {
             text-decoration: underline;
         }
-
-        .auth-error {
-            color: var(--danger-color);
-            margin: 1rem 0;
-            padding: 1rem;
-            background-color: rgba(231, 76, 60, 0.1);
-            border-radius: 5px;
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <a href="index.html">BlueMotion</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Register Section -->
-    <section class="auth-section">
-        <div class="auth-container">
+    <div class="auth-container">
+        <div class="auth-box">
             <div class="auth-header">
-                <i class="fas fa-water" style="font-size: 3rem; color: var(--primary-color);"></i>
                 <h2>Create Account</h2>
-                <p>Join BlueMotion and start your adventure</p>
+                <p>Join BlueMotion today</p>
             </div>
-
-            <div class="social-login">
-                <button class="social-btn">
-                    <i class="fab fa-google"></i>
-                    <span>Google</span>
-                </button>
-                <button class="social-btn">
-                    <i class="fab fa-facebook-f"></i>
-                    <span>Facebook</span>
-                </button>
-            </div>
-
-            <div class="divider">
-                <span>or</span>
-            </div>
-
-            <div class="auth-error"></div>
-
-            <form id="registerForm">
+            
+            <form id="registerForm" class="auth-form">
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required>
                 </div>
+                
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
+                
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                    <div class="password-requirements">
-                        <div class="requirement" data-requirement="length">
-                            <i class="fas fa-times-circle"></i>
-                            <span>At least 8 characters</span>
-                        </div>
-                        <div class="requirement" data-requirement="uppercase">
-                            <i class="fas fa-times-circle"></i>
-                            <span>One uppercase letter</span>
-                        </div>
-                        <div class="requirement" data-requirement="lowercase">
-                            <i class="fas fa-times-circle"></i>
-                            <span>One lowercase letter</span>
-                        </div>
-                        <div class="requirement" data-requirement="number">
-                            <i class="fas fa-times-circle"></i>
-                            <span>One number</span>
-                        </div>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" required>
+                        <i class="fas fa-eye toggle-password"></i>
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <div class="password-input">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        <i class="fas fa-eye toggle-password"></i>
+                    </div>
                 </div>
-                <div class="terms">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms">
+                
+                <div class="form-group terms">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="terms" required>
                         I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
                     </label>
                 </div>
-                <button type="submit" class="submit-btn" disabled>Create Account</button>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">Create Account</button>
+                </div>
+                
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                
+                <div class="social-login">
+                    <button type="button" class="btn-google">
+                        <i class="fab fa-google"></i>
+                        Sign up with Google
+                    </button>
+                </div>
             </form>
-
+            
             <div class="auth-footer">
                 <p>Already have an account? <a href="login.html">Login</a></p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const registerForm = document.getElementById('registerForm');
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            const termsCheckbox = document.getElementById('terms');
-            const submitButton = registerForm.querySelector('button[type="submit"]');
-            const errorDiv = document.querySelector('.auth-error');
-
-            // Password requirements
-            const requirements = {
-                length: str => str.length >= 8,
-                uppercase: str => /[A-Z]/.test(str),
-                lowercase: str => /[a-z]/.test(str),
-                number: str => /[0-9]/.test(str)
-            };
-
-            function updateRequirements(password) {
-                let valid = true;
-                Object.keys(requirements).forEach(req => {
-                    const element = document.querySelector(`[data-requirement="${req}"]`);
-                    const isValid = requirements[req](password);
-                    element.classList.toggle('valid', isValid);
-                    element.classList.toggle('invalid', !isValid);
-                    element.querySelector('i').className = `fas fa-${isValid ? 'check' : 'times'}-circle`;
-                    valid = valid && isValid;
-                });
-                return valid;
-            }
-
-            function validateForm() {
-                const password = passwordInput.value;
-                const confirmPassword = confirmPasswordInput.value;
-                const passwordValid = updateRequirements(password);
-                const passwordsMatch = password === confirmPassword;
-                const termsAccepted = termsCheckbox.checked;
-
-                submitButton.disabled = !(passwordValid && passwordsMatch && termsAccepted);
-
-                if (confirmPassword && !passwordsMatch) {
-                    errorDiv.textContent = 'Passwords do not match';
-                    errorDiv.style.display = 'block';
-                } else {
-                    errorDiv.style.display = 'none';
-                }
-            }
-
-            passwordInput.addEventListener('input', validateForm);
-            confirmPasswordInput.addEventListener('input', validateForm);
-            termsCheckbox.addEventListener('change', validateForm);
-
-            registerForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const formData = new FormData(registerForm);
-                const userData = {
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    password: formData.get('password')
-                };
-
-                try {
-                    // Here you would typically make an API call to your backend
-                    // For now, we'll simulate a successful registration
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-
-                    // Store user session
-                    sessionStorage.setItem('user', JSON.stringify({
-                        email: userData.email,
-                        name: userData.name
-                    }));
-
-                    // Redirect to dashboard
-                    window.location.href = 'index.html';
-
-                } catch (error) {
-                    errorDiv.textContent = 'Registration failed. Please try again.';
-                    errorDiv.style.display = 'block';
-                }
-            });
-
-            // Handle social login buttons
-            document.querySelectorAll('.social-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    errorDiv.textContent = 'Social sign up is not implemented yet';
-                    errorDiv.style.display = 'block';
-                });
-            });
-        });
-    </script>
+    <script src="js/auth.js"></script>
 </body>
 </html>

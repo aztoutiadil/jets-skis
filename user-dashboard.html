@@ -6,38 +6,40 @@
     <title>User Dashboard - BlueMotion</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="dashboard-body">
+<body>
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="dashboard-sidebar">
             <div class="sidebar-header">
-                <img src="assets/images/logo.png" alt="BlueMotion Logo" class="dashboard-logo">
                 <h2>BlueMotion</h2>
+                <span class="user-role">User Dashboard</span>
             </div>
+            
             <nav class="sidebar-nav">
-                <a href="#overview" class="nav-item active">
+                <a href="#" class="nav-item active" data-section="overview">
                     <i class="fas fa-home"></i>
                     Overview
                 </a>
-                <a href="#bookings" class="nav-item">
+                <a href="#" class="nav-item" data-section="bookings">
                     <i class="fas fa-calendar-alt"></i>
                     My Bookings
                 </a>
-                <a href="#favorites" class="nav-item">
-                    <i class="fas fa-heart"></i>
-                    Favorites
-                </a>
-                <a href="#profile" class="nav-item">
+                <a href="#" class="nav-item" data-section="profile">
                     <i class="fas fa-user"></i>
                     Profile
                 </a>
-                <a href="#settings" class="nav-item">
+                <a href="#" class="nav-item" data-section="settings">
                     <i class="fas fa-cog"></i>
                     Settings
                 </a>
-                <a href="index.html" class="nav-item logout">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-globe"></i>
+                    Back to Site
+                </a>
+                <a href="#" class="nav-item logout">
                     <i class="fas fa-sign-out-alt"></i>
                     Logout
                 </a>
@@ -56,111 +58,144 @@
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge">3</span>
                     </div>
-                    <div class="user-profile">
-                        <img src="assets/images/avatar.png" alt="User Avatar">
-                        <span class="user-name">John Doe</span>
+                    <div class="user-info">
+                        <img src="https://ui-avatars.com/api/?name=User" alt="User" class="user-avatar">
+                        <span class="user-name">Welcome, <span id="userName">User</span></span>
                     </div>
                 </div>
             </header>
 
-            <!-- Dashboard Content -->
-            <div class="dashboard-content">
-                <!-- Overview Section -->
-                <section id="overview" class="dashboard-section active">
-                    <h2>Dashboard Overview</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-ship"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Total Bookings</h3>
-                                <p>12</p>
-                            </div>
+            <!-- Overview Section -->
+            <section id="overview" class="dashboard-section active">
+                <h2>Dashboard Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-calendar-check"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Upcoming</h3>
-                                <p>2</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Reviews</h3>
-                                <p>8</p>
-                            </div>
+                        <div class="stat-info">
+                            <h3>Active Bookings</h3>
+                            <p id="activeBookings">2</p>
                         </div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Past Bookings</h3>
+                            <p id="pastBookings">5</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Spent</h3>
+                            <p id="totalSpent">$1,250</p>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="recent-bookings">
-                        <h3>Recent Bookings</h3>
-                        <div class="booking-list">
-                            <div class="booking-item">
-                                <img src="assets/images/jetski-1.jpg" alt="Jet Ski">
-                                <div class="booking-info">
-                                    <h4>Jet Ski Adventure</h4>
-                                    <p>Date: Feb 20, 2025</p>
-                                    <p>Time: 10:00 AM</p>
-                                    <span class="status upcoming">Upcoming</span>
-                                </div>
-                            </div>
-                            <div class="booking-item">
-                                <img src="assets/images/yacht-1.jpg" alt="Yacht">
-                                <div class="booking-info">
-                                    <h4>Luxury Yacht Tour</h4>
-                                    <p>Date: Feb 15, 2025</p>
-                                    <p>Time: 2:00 PM</p>
-                                    <span class="status completed">Completed</span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="activityList">
+                        <!-- Activity items will be populated by JavaScript -->
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- Profile Section -->
-                <section id="profile" class="dashboard-section">
-                    <h2>My Profile</h2>
-                    <div class="profile-container">
-                        <div class="profile-header">
-                            <div class="profile-avatar">
-                                <img src="assets/images/avatar.png" alt="User Avatar">
-                                <button class="change-avatar">
-                                    <i class="fas fa-camera"></i>
-                                </button>
-                            </div>
-                            <div class="profile-info">
-                                <h3>John Doe</h3>
-                                <p>Member since: January 2025</p>
+            <!-- Bookings Section -->
+            <section id="bookings" class="dashboard-section">
+                <h2>My Bookings</h2>
+                <div class="bookings-filter">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+                    <button class="filter-btn" data-filter="past">Past</button>
+                    <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+                </div>
+                <div class="bookings-list" id="bookingsList">
+                    <!-- Bookings will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="dashboard-section">
+                <h2>My Profile</h2>
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img src="https://ui-avatars.com/api/?name=User" alt="User">
+                            <button class="change-avatar">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="profileName">User Name</h3>
+                            <p id="profileEmail">user@example.com</p>
+                        </div>
+                    </div>
+                    <form id="profileForm" class="profile-form">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="dashboard-section">
+                <h2>Settings</h2>
+                <div class="settings-container">
+                    <div class="settings-group">
+                        <h3>Notifications</h3>
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <div class="setting-info">
+                                <h4>Email Notifications</h4>
+                                <p>Receive booking confirmations and updates via email</p>
                             </div>
                         </div>
-                        <form class="profile-form">
-                            <div class="form-group">
-                                <label>Full Name</label>
-                                <input type="text" value="John Doe">
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <div class="setting-info">
+                                <h4>SMS Notifications</h4>
+                                <p>Receive booking reminders via SMS</p>
                             </div>
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" value="john@example.com">
-                            </div>
-                            <div class="form-group">
-                                <label>Phone</label>
-                                <input type="tel" value="+1 234 567 890">
-                            </div>
-                            <div class="form-group">
-                                <label>Address</label>
-                                <textarea>123 Ocean Drive, Beach City, BC 12345</textarea>
-                            </div>
-                            <button type="submit" class="save-profile">Save Changes</button>
-                        </form>
+                        </div>
                     </div>
-                </section>
-            </div>
+                    <div class="settings-group">
+                        <h3>Privacy</h3>
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                            <div class="setting-info">
+                                <h4>Profile Visibility</h4>
+                                <p>Make your profile visible to other users</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 

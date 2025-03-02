@@ -701,3 +701,201 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Check admin authentication
+    checkAdminAuth();
+    
+    // Load dashboard data
+    loadDashboardData();
+    
+    // Handle navigation
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            if (item.classList.contains('logout')) {
+                handleLogout();
+                return;
+            }
+            
+            const section = item.dataset.section;
+            if (section) {
+                e.preventDefault();
+                showSection(section);
+                loadSectionData(section);
+            }
+        });
+    });
+});
+
+async function checkAdminAuth() {
+    try {
+        const response = await fetch('backend/api/admin/check-auth.php');
+        if (!response.ok) {
+            window.location.href = 'login.html';
+        }
+    } catch (error) {
+        console.error('Auth check failed:', error);
+        window.location.href = 'login.html';
+    }
+}
+
+async function loadDashboardData() {
+    try {
+        const response = await fetch('backend/api/admin/dashboard.php');
+        const data = await response.json();
+        
+        // Update dashboard stats
+        document.getElementById('total-bookings').textContent = data.totalBookings;
+        document.getElementById('total-revenue').textContent = `$${data.totalRevenue}`;
+        document.getElementById('active-vehicles').textContent = data.activeVehicles;
+        
+        // Update recent bookings
+        const bookingsList = document.querySelector('.recent-bookings');
+        if (bookingsList && data.recentBookings) {
+            bookingsList.innerHTML = data.recentBookings.map(booking => `
+                <div class="booking-item">
+                    <div class="booking-info">
+                        <h4>${booking.vehicleType}</h4>
+                        <p>Customer: ${booking.customerName}</p>
+                        <p>Date: ${booking.bookingDate}</p>
+                    </div>
+                    <div class="booking-status ${booking.status.toLowerCase()}">
+                        ${booking.status}
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+    }
+}
+
+async function loadSectionData(section) {
+    try {
+        const response = await fetch(`backend/api/admin/${section}.php`);
+        const data = await response.json();
+        
+        const sectionElement = document.getElementById(section);
+        if (!sectionElement) return;
+        
+        switch(section) {
+            case 'vehicles':
+                renderVehicles(data);
+                break;
+            case 'reservations':
+                renderReservations(data);
+                break;
+            case 'users':
+                renderUsers(data);
+                break;
+        }
+    } catch (error) {
+        console.error(`Failed to load ${section} data:`, error);
+    }
+}
+
+function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('.admin-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Show selected section
+    const selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+    
+    // Update active nav item
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.section === sectionId) {
+            item.classList.add('active');
+        }
+    });
+}
+
+function handleLogout() {
+    fetch('backend/api/auth/logout.php')
+        .then(() => {
+            window.location.href = 'login.html';
+        })
+        .catch(error => {
+            console.error('Logout failed:', error);
+        });
+}
+
+// Helper functions for rendering different sections
+function renderVehicles(data) {
+    const vehiclesContainer = document.querySelector('#vehicles .vehicles-grid');
+    if (!vehiclesContainer) return;
+    
+    vehiclesContainer.innerHTML = data.map(vehicle => `
+        <div class="vehicle-card">
+            <img src="${vehicle.image}" alt="${vehicle.name}">
+            <div class="vehicle-info">
+                <h3>${vehicle.name}</h3>
+                <p>${vehicle.description}</p>
+                <div class="vehicle-status ${vehicle.status.toLowerCase()}">
+                    ${vehicle.status}
+                </div>
+            </div>
+            <div class="vehicle-actions">
+                <button onclick="editVehicle(${vehicle.id})">Edit</button>
+                <button onclick="toggleVehicleStatus(${vehicle.id})">
+                    ${vehicle.status === 'Active' ? 'Deactivate' : 'Activate'}
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderReservations(data) {
+    const reservationsContainer = document.querySelector('#reservations .reservations-list');
+    if (!reservationsContainer) return;
+    
+    reservationsContainer.innerHTML = data.map(reservation => `
+        <div class="reservation-item">
+            <div class="reservation-details">
+                <h4>Booking #${reservation.id}</h4>
+                <p>Vehicle: ${reservation.vehicleType}</p>
+                <p>Customer: ${reservation.customerName}</p>
+                <p>Date: ${reservation.bookingDate}</p>
+                <p>Amount: $${reservation.amount}</p>
+            </div>
+            <div class="reservation-status ${reservation.status.toLowerCase()}">
+                ${reservation.status}
+            </div>
+            <div class="reservation-actions">
+                <select onchange="updateReservationStatus(${reservation.id}, this.value)">
+                    <option value="pending" ${reservation.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                    <option value="confirmed" ${reservation.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                    <option value="completed" ${reservation.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                    <option value="cancelled" ${reservation.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                </select>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderUsers(data) {
+    const usersContainer = document.querySelector('#users .users-list');
+    if (!usersContainer) return;
+    
+    usersContainer.innerHTML = data.map(user => `
+        <div class="user-item">
+            <div class="user-info">
+                <h4>${user.name}</h4>
+                <p>Email: ${user.email}</p>
+                <p>Joined: ${user.joinDate}</p>
+                <p>Bookings: ${user.totalBookings}</p>
+            </div>
+            <div class="user-actions">
+                <button onclick="toggleUserStatus(${user.id})">
+                    ${user.status === 'Active' ? 'Deactivate' : 'Activate'}
+                </button>
+            </div>
+        </div>
+    `).join('');
+}

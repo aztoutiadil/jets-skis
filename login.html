@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - BlueMotion</title>
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .auth-section {
+        .auth-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -17,7 +18,7 @@
             padding: 2rem;
         }
 
-        .auth-container {
+        .auth-box {
             max-width: 400px;
             width: 100%;
             background-color: var(--bg-color);
@@ -31,12 +32,6 @@
             margin-bottom: 2rem;
         }
 
-        .auth-header img {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 1rem;
-        }
-
         .auth-header h2 {
             color: var(--heading-color);
             margin-bottom: 0.5rem;
@@ -47,52 +42,13 @@
             opacity: 0.8;
         }
 
-        .social-login {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .social-btn {
+        .auth-form {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.8rem;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            flex-direction: column;
         }
 
-        .social-btn:hover {
-            background-color: var(--light-color);
-        }
-
-        .social-btn i {
-            font-size: 1.2rem;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 2rem 0;
-            color: var(--text-color);
-            opacity: 0.5;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: "";
-            flex: 1;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .divider span {
-            padding: 0 1rem;
+        .form-group {
+            margin-bottom: 1rem;
         }
 
         .form-group label {
@@ -112,6 +68,18 @@
         .form-group input:focus {
             border-color: var(--primary-color);
             outline: none;
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .password-input i {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            cursor: pointer;
         }
 
         .remember-forgot {
@@ -137,7 +105,7 @@
             text-decoration: underline;
         }
 
-        .submit-btn {
+        .btn-primary {
             width: 100%;
             padding: 1rem;
             background: var(--gradient-1);
@@ -149,8 +117,51 @@
             transition: opacity 0.3s ease;
         }
 
-        .submit-btn:hover {
+        .btn-primary:hover {
             opacity: 0.9;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-divider span {
+            padding: 0 1rem;
+        }
+
+        .social-login {
+            margin-top: 1rem;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 1rem;
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-google:hover {
+            background-color: var(--light-color);
+        }
+
+        .btn-google i {
+            margin-right: 0.5rem;
         }
 
         .auth-footer {
@@ -166,118 +177,60 @@
         .auth-footer a:hover {
             text-decoration: underline;
         }
-
-        .auth-error {
-            color: var(--danger-color);
-            margin: 1rem 0;
-            padding: 1rem;
-            background-color: rgba(231, 76, 60, 0.1);
-            border-radius: 5px;
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <a href="index.html">BlueMotion</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Login Section -->
-    <section class="auth-section">
-        <div class="auth-container">
+    <div class="auth-container">
+        <div class="auth-box">
             <div class="auth-header">
-                <i class="fas fa-water" style="font-size: 3rem; color: var(--primary-color);"></i>
-                <h2>Welcome Back!</h2>
-                <p>Please login to your account</p>
+                <h2>Welcome Back</h2>
+                <p>Login to access your account</p>
             </div>
-
-            <div class="social-login">
-                <button class="social-btn">
-                    <i class="fab fa-google"></i>
-                    <span>Google</span>
-                </button>
-                <button class="social-btn">
-                    <i class="fab fa-facebook-f"></i>
-                    <span>Facebook</span>
-                </button>
-            </div>
-
-            <div class="divider">
-                <span>or</span>
-            </div>
-
-            <div class="auth-error"></div>
-
-            <form id="loginForm">
+            
+            <form id="loginForm" class="auth-form">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
+                
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" required>
+                        <i class="fas fa-eye toggle-password"></i>
+                    </div>
                 </div>
-                <div class="remember-forgot">
+                
+                <div class="form-group remember-forgot">
                     <label class="remember-me">
                         <input type="checkbox" name="remember">
-                        <span>Remember me</span>
+                        Remember me
                     </label>
                     <a href="#" class="forgot-password">Forgot Password?</a>
                 </div>
-                <button type="submit" class="submit-btn">Login</button>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">Login</button>
+                </div>
+                
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                
+                <div class="social-login">
+                    <button type="button" class="btn-google">
+                        <i class="fab fa-google"></i>
+                        Login with Google
+                    </button>
+                </div>
             </form>
-
+            
             <div class="auth-footer">
-                <p>Don't have an account? <a href="register.html">Sign up</a></p>
+                <p>Don't have an account? <a href="register.html">Sign Up</a></p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const errorDiv = document.querySelector('.auth-error');
-
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-
-                try {
-                    // Here you would typically make an API call to your backend
-                    // For now, we'll simulate a successful login
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-
-                    // Store user session
-                    sessionStorage.setItem('user', JSON.stringify({
-                        email: email,
-                        name: email.split('@')[0]
-                    }));
-
-                    // Redirect to dashboard or previous page
-                    const redirectUrl = sessionStorage.getItem('redirectUrl') || 'index.html';
-                    window.location.href = redirectUrl;
-
-                } catch (error) {
-                    errorDiv.textContent = 'Invalid email or password';
-                    errorDiv.style.display = 'block';
-                }
-            });
-
-            // Handle social login buttons
-            document.querySelectorAll('.social-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    errorDiv.textContent = 'Social login is not implemented yet';
-                    errorDiv.style.display = 'block';
-                });
-            });
-        });
-    </script>
+    <script src="js/auth.js"></script>
 </body>
 </html>

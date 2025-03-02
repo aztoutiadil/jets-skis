@@ -13,7 +13,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
-                <img src="assets/images/logo.png" alt="BlueMotion Logo">
+               
                 <h1>BlueMotion</h1>
             </div>
             
@@ -169,6 +169,66 @@
                     </div>
                     <button class="book-now" data-item="group">Book Now</button>
                 </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Reservation Form Section -->
+    <section id="reservation-section" class="reservation-section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Make Your Reservation</h2>
+            <div class="reservation-form-container">
+                <form id="reservationForm" class="reservation-form">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationDate">Date</label>
+                        <input type="date" id="reservationDate" name="reservationDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservationTime">Time</label>
+                        <input type="time" id="reservationTime" name="reservationTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration (hours)</label>
+                        <select id="duration" name="duration" required>
+                            <option value="1">1 Hour</option>
+                            <option value="2">2 Hours</option>
+                            <option value="3">3 Hours</option>
+                            <option value="4">4 Hours</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="package">Selected Package</label>
+                        <input type="text" id="package" name="package" readonly>
+                    </div>
+                    <div class="reservation-summary">
+                        <h3>Reservation Summary</h3>
+                        <div class="summary-item">
+                            <span>Package:</span>
+                            <span id="summary-package"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Duration:</span>
+                            <span id="summary-duration">1 Hour</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total:</span>
+                            <span id="summary-total"></span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Proceed to Payment</button>
+                </form>
             </div>
         </div>
     </section>
@@ -397,6 +457,7 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/reservation.js"></script>
     <script src="js/booking.js"></script>
     <script src="js/payment.js"></script>
 

@@ -183,174 +183,268 @@ loadReservations();
 
 // User Dashboard Functionality
 document.addEventListener('DOMContentLoaded', () => {
-    // Navigation
-    const navItems = document.querySelectorAll('.nav-item');
-    const sections = document.querySelectorAll('.dashboard-section');
+    // Check authentication
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
 
+    // Update user information
+    updateUserInfo(user);
+    
+    // Load dashboard data
+    loadDashboardData();
+    
+    // Handle navigation
+    const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = item.getAttribute('href').slice(1);
+            if (item.classList.contains('logout')) {
+                handleLogout();
+                return;
+            }
             
-            // Update active states
-            navItems.forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
-            
-            // Show target section
-            sections.forEach(section => {
-                section.classList.remove('active');
-                if (section.id === targetId) {
-                    section.classList.add('active');
-                }
-            });
+            const section = item.dataset.section;
+            if (section) {
+                e.preventDefault();
+                showSection(section);
+            }
         });
     });
 
-    // Profile Image Upload
-    const changeAvatarBtn = document.querySelector('.change-avatar');
-    const profileImg = document.querySelector('.profile-avatar img');
-
-    if (changeAvatarBtn) {
-        changeAvatarBtn.addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        profileImg.src = e.target.result;
-                        // Here you would typically upload the image to your server
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            
-            input.click();
-        });
-    }
-
-    // Profile Form Submission
-    const profileForm = document.querySelector('.profile-form');
+    // Handle profile form submission
+    const profileForm = document.getElementById('profileForm');
     if (profileForm) {
-        profileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        profileForm.addEventListener('submit', handleProfileUpdate);
+    }
+
+    // Handle booking filters
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.dataset.filter;
+            filterBookings(filter);
             
-            // Show loading state
-            const submitBtn = profileForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Saving...';
-            submitBtn.disabled = true;
-
-            try {
-                // Here you would typically send the form data to your server
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-                
-                showNotification('Profile updated successfully!', 'success');
-            } catch (error) {
-                showNotification('Error updating profile. Please try again.', 'error');
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
+            // Update active filter button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
         });
-    }
-
-    // Notification System
-    function showNotification(message, type = 'success') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-
-        document.body.appendChild(notification);
-
-        // Animate in
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-            notification.style.opacity = '1';
-        }, 10);
-
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.style.transform = 'translateX(200%)';
-            notification.style.opacity = '0';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-
-    // Load User Data
-    loadUserData();
+    });
 });
 
-// Load user data from storage or API
-async function loadUserData() {
+function updateUserInfo(user) {
+    // Update header user name
+    const userNameElement = document.getElementById('userName');
+    if (userNameElement) {
+        userNameElement.textContent = user.name;
+    }
+
+    // Update profile information
+    document.getElementById('profileName').textContent = user.name;
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('fullName').value = user.name;
+    document.getElementById('email').value = user.email;
+    document.getElementById('phone').value = user.phone || '';
+}
+
+async function loadDashboardData() {
     try {
-        // Here you would typically fetch user data from your server
-        const userData = JSON.parse(sessionStorage.getItem('user')) || {
-            name: 'John Doe',
-            email: 'john@example.com',
-            phone: '+1 234 567 890',
-            bookings: []
-        };
-
-        // Update profile information
-        document.querySelectorAll('.user-name').forEach(el => {
-            el.textContent = userData.name;
-        });
-
-        // Update stats
-        updateDashboardStats(userData);
-
-        // Update recent bookings
-        updateRecentBookings(userData.bookings);
-
+        const response = await fetch('backend/api/user/dashboard.php');
+        const data = await response.json();
+        
+        // Update statistics
+        document.getElementById('activeBookings').textContent = data.activeBookings;
+        document.getElementById('pastBookings').textContent = data.pastBookings;
+        document.getElementById('totalSpent').textContent = `$${data.totalSpent}`;
+        
+        // Update activity list
+        const activityList = document.getElementById('activityList');
+        if (activityList && data.recentActivity) {
+            activityList.innerHTML = data.recentActivity.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas ${getActivityIcon(activity.type)}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <p>${activity.description}</p>
+                        <span>${formatDate(activity.date)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Update bookings list
+        const bookingsList = document.getElementById('bookingsList');
+        if (bookingsList && data.bookings) {
+            bookingsList.innerHTML = data.bookings.map(booking => `
+                <div class="booking-card" data-status="${booking.status.toLowerCase()}">
+                    <div class="booking-header">
+                        <h3>${booking.vehicleType}</h3>
+                        <span class="booking-status ${booking.status.toLowerCase()}">${booking.status}</span>
+                    </div>
+                    <div class="booking-details">
+                        <p><i class="fas fa-calendar"></i> ${formatDate(booking.date)}</p>
+                        <p><i class="fas fa-clock"></i> ${booking.time}</p>
+                        <p><i class="fas fa-hourglass-half"></i> ${booking.duration} hour(s)</p>
+                        <p><i class="fas fa-dollar-sign"></i> ${booking.price}</p>
+                    </div>
+                    <div class="booking-actions">
+                        ${getBookingActions(booking)}
+                    </div>
+                </div>
+            `).join('');
+        }
     } catch (error) {
-        console.error('Error loading user data:', error);
-        showNotification('Error loading user data', 'error');
+        console.error('Failed to load dashboard data:', error);
     }
 }
 
-// Update dashboard statistics
-function updateDashboardStats(userData) {
-    const stats = {
-        totalBookings: userData.bookings?.length || 0,
-        upcomingBookings: userData.bookings?.filter(b => new Date(b.date) > new Date()).length || 0,
-        completedBookings: userData.bookings?.filter(b => new Date(b.date) < new Date()).length || 0
-    };
-
-    // Update stats display
-    Object.entries(stats).forEach(([key, value]) => {
-        const el = document.querySelector(`[data-stat="${key}"]`);
-        if (el) {
-            el.textContent = value;
+function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('.dashboard-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show selected section
+    const selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.classList.add('active');
+    }
+    
+    // Update active nav item
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.section === sectionId) {
+            item.classList.add('active');
         }
     });
 }
 
-// Update recent bookings list
-function updateRecentBookings(bookings = []) {
-    const bookingsList = document.querySelector('.booking-list');
-    if (!bookingsList) return;
+async function handleProfileUpdate(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const profileData = {
+        name: formData.get('fullName'),
+        email: formData.get('email'),
+        phone: formData.get('phone')
+    };
 
-    bookingsList.innerHTML = bookings.length ? '' : '<p>No bookings found</p>';
+    try {
+        const response = await fetch('backend/api/user/update-profile.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(profileData)
+        });
 
-    bookings.slice(0, 5).forEach(booking => {
-        const status = new Date(booking.date) > new Date() ? 'upcoming' : 'completed';
-        
-        const bookingItem = document.createElement('div');
-        bookingItem.className = 'booking-item';
-        bookingItem.innerHTML = `
-            <img src="assets/images/${booking.type.toLowerCase()}.jpg" alt="${booking.type}">
-            <div class="booking-info">
-                <h4>${booking.type}</h4>
-                <p>Date: ${new Date(booking.date).toLocaleDateString()}</p>
-                <p>Time: ${booking.time}</p>
-                <span class="status ${status}">${status}</span>
-            </div>
-        `;
-        
-        bookingsList.appendChild(bookingItem);
+        const data = await response.json();
+
+        if (response.ok) {
+            // Update local storage
+            const user = JSON.parse(localStorage.getItem('user'));
+            user.name = profileData.name;
+            user.email = profileData.email;
+            user.phone = profileData.phone;
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            // Update UI
+            updateUserInfo(user);
+            showSuccessMessage('Profile updated successfully');
+        } else {
+            showErrorMessage(data.message || 'Failed to update profile');
+        }
+    } catch (error) {
+        console.error('Profile update error:', error);
+        showErrorMessage('An error occurred while updating your profile');
+    }
+}
+
+function handleLogout() {
+    fetch('backend/api/auth/logout.php')
+        .then(() => {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        })
+        .catch(error => {
+            console.error('Logout failed:', error);
+        });
+}
+
+function filterBookings(filter) {
+    const bookings = document.querySelectorAll('.booking-card');
+    bookings.forEach(booking => {
+        const status = booking.dataset.status;
+        if (filter === 'all' || status === filter) {
+            booking.style.display = 'block';
+        } else {
+            booking.style.display = 'none';
+        }
     });
+}
+
+// Helper functions
+function getActivityIcon(type) {
+    const icons = {
+        booking: 'fa-calendar-plus',
+        payment: 'fa-credit-card',
+        cancellation: 'fa-calendar-times',
+        update: 'fa-edit'
+    };
+    return icons[type] || 'fa-info-circle';
+}
+
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function getBookingActions(booking) {
+    if (booking.status.toLowerCase() === 'upcoming') {
+        return `
+            <button class="btn-secondary" onclick="viewBooking(${booking.id})">View Details</button>
+            <button class="btn-danger" onclick="cancelBooking(${booking.id})">Cancel</button>
+        `;
+    }
+    return `<button class="btn-secondary" onclick="viewBooking(${booking.id})">View Details</button>`;
+}
+
+function showSuccessMessage(message) {
+    // Implementation for showing success message
+    alert(message);
+}
+
+function showErrorMessage(message) {
+    // Implementation for showing error message
+    alert(message);
+}
+
+// Booking actions
+function viewBooking(bookingId) {
+    // Implementation for viewing booking details
+    console.log('View booking:', bookingId);
+}
+
+function cancelBooking(bookingId) {
+    if (confirm('Are you sure you want to cancel this booking?')) {
+        fetch(`backend/api/user/cancel-booking.php?id=${bookingId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadDashboardData();
+                    showSuccessMessage('Booking cancelled successfully');
+                } else {
+                    showErrorMessage(data.message || 'Failed to cancel booking');
+                }
+            })
+            .catch(error => {
+                console.error('Cancel booking error:', error);
+                showErrorMessage('An error occurred while cancelling the booking');
+            });
+    }
 }

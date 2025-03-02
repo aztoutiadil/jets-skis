@@ -34,8 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
     bookingChoices.forEach(choice => {
         choice.addEventListener('click', () => {
             const type = choice.dataset.type;
-            bookingChoiceModal.classList.remove('show');
-            scrollToBookingSection(type);
+            const selectedVehicle = choice.closest('.pricing-card').querySelector('h3').textContent;
+            const price = choice.closest('.pricing-card').querySelector('.price').textContent;
+            
+            // Store booking details in sessionStorage
+            sessionStorage.setItem('bookingDetails', JSON.stringify({
+                vehicleType: selectedVehicle,
+                price: price,
+                bookingType: type
+            }));
+            
+            // Redirect to payment page
+            window.location.href = 'payment.html';
         });
     });
 
